@@ -31,7 +31,13 @@ a while.
 
 4. **Wire it up to Claude Code.** ClaudePet only reacts to things once Claude Code is
    configured to tell it what's happening, via hooks in `~/.claude/settings.json`. Open
-   that file (create it if it doesn't exist) and merge in:
+   that file in any text editor —
+
+   ```bash
+   open -e ~/.claude/settings.json
+   ```
+
+   (this creates it, empty, if it doesn't exist yet) — and merge in:
 
    ```json
    {
