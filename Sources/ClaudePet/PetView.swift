@@ -20,6 +20,7 @@ final class PetView: NSView {
     }
 
     var onDragEnded: ((NSPoint) -> Void)?
+    var onRightClick: ((NSPoint, NSView) -> Void)?
 
     private var dragStartMouseLocation: NSPoint = .zero
     private var dragStartFrameOrigin: NSPoint = .zero
@@ -400,5 +401,10 @@ final class PetView: NSView {
     override func mouseUp(with event: NSEvent) {
         guard let window = window else { return }
         onDragEnded?(window.frame.origin)
+    }
+
+    override func rightMouseDown(with event: NSEvent) {
+        let localPoint = convert(event.locationInWindow, from: nil)
+        onRightClick?(localPoint, self)
     }
 }

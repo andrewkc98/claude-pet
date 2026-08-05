@@ -33,6 +33,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         )
 
+        panel.onRightClick = { [weak self] point, view in
+            self?.menuBar.popUp(at: point, in: view)
+        }
+
         let socketPath = NSString(string: "~/.claudepet/pet.sock").expandingTildeInPath
         let server = SocketServer(socketPath: socketPath) { [weak self] event in
             DispatchQueue.main.async {

@@ -6,6 +6,7 @@ import Cocoa
 /// this would be a much bigger change than the menu itself warrants.
 final class MenuBarController {
     private let statusItem: NSStatusItem
+    private let menu = NSMenu()
     private let onToggleVisibility: () -> Void
     private let onSleepTimeoutChange: (TimeInterval) -> Void
     private let onQuit: () -> Void
@@ -42,8 +43,6 @@ final class MenuBarController {
             }
         }
 
-        let menu = NSMenu()
-
         let toggleItem = NSMenuItem(title: "Show/Hide Pet", action: #selector(handleToggleVisibility), keyEquivalent: "")
         toggleItem.target = self
         menu.addItem(toggleItem)
@@ -77,6 +76,14 @@ final class MenuBarController {
         menu.addItem(quitItem)
 
         statusItem.menu = menu
+    }
+
+    /// Shows the same menu instance used by the status item — right-clicking
+    /// the pet itself, per roadmap 1.4, rather than requiring the menu bar.
+    /// Sharing the instance (not rebuilding a second one) keeps checkbox
+    /// states like "Launch at Login" automatically in sync between the two.
+    func popUp(at point: NSPoint, in view: NSView) {
+        menu.popUp(positioning: nil, at: point, in: view)
     }
 
     @objc private func handleToggleVisibility() {

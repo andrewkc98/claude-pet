@@ -7,6 +7,10 @@ final class PetPanel: NSPanel {
 
     private var petView: PetView?
 
+    var onRightClick: ((NSPoint, NSView) -> Void)? {
+        didSet { petView?.onRightClick = onRightClick }
+    }
+
     convenience init() {
         let size = NSSize(width: Self.width, height: Self.height)
         self.init(
