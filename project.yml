@@ -1,0 +1,44 @@
+name: ClaudePet
+options:
+  bundleIdPrefix: com.andrewtucker
+  deploymentTarget:
+    macOS: "13.0"
+targets:
+  ClaudePet:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/ClaudePet
+      - path: Assets/cat_idle.png
+        buildPhase: resources
+      - path: Assets/cat_jump.png
+        buildPhase: resources
+      - path: Assets/cat_sleep_v2_calm.png
+        buildPhase: resources
+      - path: Assets/cat_wake.png
+        buildPhase: resources
+    info:
+      path: Generated/Info.plist
+      properties:
+        LSUIElement: true
+        CFBundleDisplayName: ClaudePet
+        NSHumanReadableCopyright: ""
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.andrewtucker.ClaudePet
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: false
+        GENERATE_INFOPLIST_FILE: false
+  petsend:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Sources/petsend
+    settings:
+      base:
+        PRODUCT_NAME: petsend
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic

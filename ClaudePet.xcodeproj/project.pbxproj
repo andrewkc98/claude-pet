@@ -1,0 +1,465 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		215D215BCD22B7B3C34952B0 /* cat_jump.png in Resources */ = {isa = PBXBuildFile; fileRef = CEEF0AE054642B6C57A817C1 /* cat_jump.png */; };
+		375E2750C09530D2AC18224C /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6491972415601740D409B7EB /* MenuBarController.swift */; };
+		38C7539E6CA764BE2FD73B40 /* SocketServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC86D3F782EF232DCD146EE /* SocketServer.swift */; };
+		59937FB17FF43CA8D301674F /* PetPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABAE77ECA7F970DE91EBB5B /* PetPanel.swift */; };
+		5C5971E49E13399142A6337F /* PetEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DB24D20BFAAF1AF9525DC6 /* PetEvent.swift */; };
+		5EB5104FAEE1191915CD5E69 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC49A09C13872D0584B5730E /* main.swift */; };
+		71C92F632266EFDBA8AF83AE /* cat_sleep_v2_calm.png in Resources */ = {isa = PBXBuildFile; fileRef = 9F51E6E899D0792032C0D57B /* cat_sleep_v2_calm.png */; };
+		732AF201EF5320442B9BBF97 /* SpriteAnimationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3750F6B484ED37F5DE2BC15D /* SpriteAnimationConfig.swift */; };
+		835F3B1D2BC2CB2ACAC021E8 /* PetPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F0C44EB3412094D80FD9EB /* PetPositionStore.swift */; };
+		8B5F1416178DA77D3A7B41D8 /* cat_idle.png in Resources */ = {isa = PBXBuildFile; fileRef = 0BCE5CA61392B67B556978A1 /* cat_idle.png */; };
+		8F388DC2C45540505E0AEF49 /* cat_wake.png in Resources */ = {isa = PBXBuildFile; fileRef = C6CC7084260E60FBBB882B22 /* cat_wake.png */; };
+		A0134A5CBF2784C96725708C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A019130A7F82CDEDAD3119 /* AppDelegate.swift */; };
+		AD52967BF91081DEC7CE6BC6 /* NSScreen+PersistentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194084EE1015AB2A2945F983 /* NSScreen+PersistentID.swift */; };
+		B618911E40297F12CD53490C /* EmoteOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260DB44C7F7AC05E4E03BDBB /* EmoteOverlay.swift */; };
+		B71B176E9EF4B229D5174D18 /* JumpArc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7661C3C5BB3FCF4DFD18A /* JumpArc.swift */; };
+		C46CCED6572A477C465B8896 /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CA33AE1ED2558B4B62CE7C /* PetView.swift */; };
+		D1F433040C40D2388A661C23 /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BF0A682FB7ECF5E44813DF /* AppMain.swift */; };
+		E41EC6A4B4259683399336F0 /* SpriteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2975B76B7182B053C879EE6 /* SpriteSheet.swift */; };
+		F8E4C41485859F4773EE3AFC /* PlayOnceTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E04E885AF6FB7EC0C1215F5 /* PlayOnceTimer.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		04F879D1F3889632A40A446A /* ClaudePet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClaudePet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BCE5CA61392B67B556978A1 /* cat_idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_idle.png; sourceTree = "<group>"; };
+		194084EE1015AB2A2945F983 /* NSScreen+PersistentID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSScreen+PersistentID.swift"; sourceTree = "<group>"; };
+		260DB44C7F7AC05E4E03BDBB /* EmoteOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmoteOverlay.swift; sourceTree = "<group>"; };
+		3750F6B484ED37F5DE2BC15D /* SpriteAnimationConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAnimationConfig.swift; sourceTree = "<group>"; };
+		3AC86D3F782EF232DCD146EE /* SocketServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketServer.swift; sourceTree = "<group>"; };
+		3E04E885AF6FB7EC0C1215F5 /* PlayOnceTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayOnceTimer.swift; sourceTree = "<group>"; };
+		42CA33AE1ED2558B4B62CE7C /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetView.swift; sourceTree = "<group>"; };
+		6491972415601740D409B7EB /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
+		66040F7D6F56E558A52155A2 /* petsend */ = {isa = PBXFileReference; includeInIndex = 0; path = petsend; sourceTree = BUILT_PRODUCTS_DIR; };
+		71BF0A682FB7ECF5E44813DF /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
+		7BF7661C3C5BB3FCF4DFD18A /* JumpArc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpArc.swift; sourceTree = "<group>"; };
+		98A019130A7F82CDEDAD3119 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9F51E6E899D0792032C0D57B /* cat_sleep_v2_calm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_sleep_v2_calm.png; sourceTree = "<group>"; };
+		A2975B76B7182B053C879EE6 /* SpriteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteSheet.swift; sourceTree = "<group>"; };
+		B0F0C44EB3412094D80FD9EB /* PetPositionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetPositionStore.swift; sourceTree = "<group>"; };
+		C6CC7084260E60FBBB882B22 /* cat_wake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_wake.png; sourceTree = "<group>"; };
+		CEEF0AE054642B6C57A817C1 /* cat_jump.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_jump.png; sourceTree = "<group>"; };
+		EABAE77ECA7F970DE91EBB5B /* PetPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetPanel.swift; sourceTree = "<group>"; };
+		F0DB24D20BFAAF1AF9525DC6 /* PetEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetEvent.swift; sourceTree = "<group>"; };
+		FC49A09C13872D0584B5730E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0C8D4E57907EC8F4100B2112 /* ClaudePet */ = {
+			isa = PBXGroup;
+			children = (
+				98A019130A7F82CDEDAD3119 /* AppDelegate.swift */,
+				71BF0A682FB7ECF5E44813DF /* AppMain.swift */,
+				260DB44C7F7AC05E4E03BDBB /* EmoteOverlay.swift */,
+				7BF7661C3C5BB3FCF4DFD18A /* JumpArc.swift */,
+				6491972415601740D409B7EB /* MenuBarController.swift */,
+				194084EE1015AB2A2945F983 /* NSScreen+PersistentID.swift */,
+				F0DB24D20BFAAF1AF9525DC6 /* PetEvent.swift */,
+				EABAE77ECA7F970DE91EBB5B /* PetPanel.swift */,
+				B0F0C44EB3412094D80FD9EB /* PetPositionStore.swift */,
+				42CA33AE1ED2558B4B62CE7C /* PetView.swift */,
+				3E04E885AF6FB7EC0C1215F5 /* PlayOnceTimer.swift */,
+				3AC86D3F782EF232DCD146EE /* SocketServer.swift */,
+				3750F6B484ED37F5DE2BC15D /* SpriteAnimationConfig.swift */,
+				A2975B76B7182B053C879EE6 /* SpriteSheet.swift */,
+			);
+			name = ClaudePet;
+			path = Sources/ClaudePet;
+			sourceTree = "<group>";
+		};
+		270C8A33EDF382E356684957 = {
+			isa = PBXGroup;
+			children = (
+				648FEC631F5BD14EE9B831A5 /* Assets */,
+				0C8D4E57907EC8F4100B2112 /* ClaudePet */,
+				4D43898D47CC98FC30F9C392 /* petsend */,
+				A33EBD76D4D056D092FC0E1C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4D43898D47CC98FC30F9C392 /* petsend */ = {
+			isa = PBXGroup;
+			children = (
+				FC49A09C13872D0584B5730E /* main.swift */,
+			);
+			name = petsend;
+			path = Sources/petsend;
+			sourceTree = "<group>";
+		};
+		648FEC631F5BD14EE9B831A5 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				0BCE5CA61392B67B556978A1 /* cat_idle.png */,
+				CEEF0AE054642B6C57A817C1 /* cat_jump.png */,
+				9F51E6E899D0792032C0D57B /* cat_sleep_v2_calm.png */,
+				C6CC7084260E60FBBB882B22 /* cat_wake.png */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		A33EBD76D4D056D092FC0E1C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				04F879D1F3889632A40A446A /* ClaudePet.app */,
+				66040F7D6F56E558A52155A2 /* petsend */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C538C85E5DD499FEE40E7032 /* petsend */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03EA4ED6A7C370D87B632685 /* Build configuration list for PBXNativeTarget "petsend" */;
+			buildPhases = (
+				21F38186D5D56A96F981DC06 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = petsend;
+			packageProductDependencies = (
+			);
+			productName = petsend;
+			productReference = 66040F7D6F56E558A52155A2 /* petsend */;
+			productType = "com.apple.product-type.tool";
+		};
+		D012265346EB5FB35FC9A56C /* ClaudePet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 625636317E97D514D597EF32 /* Build configuration list for PBXNativeTarget "ClaudePet" */;
+			buildPhases = (
+				9E9BAC3187F4E9B4860A02C1 /* Sources */,
+				F04340D8DB1F561312520670 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ClaudePet;
+			packageProductDependencies = (
+			);
+			productName = ClaudePet;
+			productReference = 04F879D1F3889632A40A446A /* ClaudePet.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B21C5FC511D1C2CD931F9A45 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					C538C85E5DD499FEE40E7032 = {
+						ProvisioningStyle = Automatic;
+					};
+					D012265346EB5FB35FC9A56C = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A4BD8D590ADF82130F1B2081 /* Build configuration list for PBXProject "ClaudePet" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 270C8A33EDF382E356684957;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A33EBD76D4D056D092FC0E1C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D012265346EB5FB35FC9A56C /* ClaudePet */,
+				C538C85E5DD499FEE40E7032 /* petsend */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F04340D8DB1F561312520670 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B5F1416178DA77D3A7B41D8 /* cat_idle.png in Resources */,
+				215D215BCD22B7B3C34952B0 /* cat_jump.png in Resources */,
+				71C92F632266EFDBA8AF83AE /* cat_sleep_v2_calm.png in Resources */,
+				8F388DC2C45540505E0AEF49 /* cat_wake.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		21F38186D5D56A96F981DC06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EB5104FAEE1191915CD5E69 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E9BAC3187F4E9B4860A02C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0134A5CBF2784C96725708C /* AppDelegate.swift in Sources */,
+				D1F433040C40D2388A661C23 /* AppMain.swift in Sources */,
+				B618911E40297F12CD53490C /* EmoteOverlay.swift in Sources */,
+				B71B176E9EF4B229D5174D18 /* JumpArc.swift in Sources */,
+				375E2750C09530D2AC18224C /* MenuBarController.swift in Sources */,
+				AD52967BF91081DEC7CE6BC6 /* NSScreen+PersistentID.swift in Sources */,
+				5C5971E49E13399142A6337F /* PetEvent.swift in Sources */,
+				59937FB17FF43CA8D301674F /* PetPanel.swift in Sources */,
+				835F3B1D2BC2CB2ACAC021E8 /* PetPositionStore.swift in Sources */,
+				C46CCED6572A477C465B8896 /* PetView.swift in Sources */,
+				F8E4C41485859F4773EE3AFC /* PlayOnceTimer.swift in Sources */,
+				38C7539E6CA764BE2FD73B40 /* SocketServer.swift in Sources */,
+				732AF201EF5320442B9BBF97 /* SpriteAnimationConfig.swift in Sources */,
+				E41EC6A4B4259683399336F0 /* SpriteSheet.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		388425E3246ACADD602E3CF0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		6FCE9E5FD7D1085727FBC752 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Generated/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andrewtucker.ClaudePet;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8406B7811DAE4642BD26E744 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Generated/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andrewtucker.ClaudePet;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C584A8B653F7C8CCB6695EF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andrewtucker.petsend;
+				PRODUCT_NAME = petsend;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C846A078C6075ADF43D20A06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andrewtucker.petsend;
+				PRODUCT_NAME = petsend;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		ECA4B68352F5F46B497D08E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		03EA4ED6A7C370D87B632685 /* Build configuration list for PBXNativeTarget "petsend" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C846A078C6075ADF43D20A06 /* Debug */,
+				C584A8B653F7C8CCB6695EF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		625636317E97D514D597EF32 /* Build configuration list for PBXNativeTarget "ClaudePet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FCE9E5FD7D1085727FBC752 /* Debug */,
+				8406B7811DAE4642BD26E744 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A4BD8D590ADF82130F1B2081 /* Build configuration list for PBXProject "ClaudePet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ECA4B68352F5F46B497D08E0 /* Debug */,
+				388425E3246ACADD602E3CF0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B21C5FC511D1C2CD931F9A45 /* Project object */;
+}
