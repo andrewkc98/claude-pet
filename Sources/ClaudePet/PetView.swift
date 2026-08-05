@@ -84,12 +84,17 @@ final class PetView: NSView {
     /// States representing a brief, self-terminating reaction that should be
     /// allowed to finish playing rather than getting cut short by the next
     /// prompt/tool event — which, during an active turn, can arrive within
-    /// milliseconds of the reaction starting.
+    /// milliseconds of the reaction starting. Deliberately excludes .alerting:
+    /// that one isn't self-terminating, and a genuine "needs you" alert should
+    /// yield the moment real activity resumes (e.g. PostToolUse firing right
+    /// after an AskUserQuestion gets answered) rather than requiring a click
+    /// even though the moment it was for has clearly passed. It persists
+    /// during a true block anyway, since nothing else fires while blocked.
     private var isInProtectedReaction: Bool {
         switch state {
-        case .jumping, .waking, .alerting, .succeeding, .failing:
+        case .jumping, .waking, .succeeding, .failing:
             return true
-        case .idle, .thinking, .sleeping:
+        case .idle, .thinking, .sleeping, .alerting:
             return false
         }
     }
@@ -111,7 +116,7 @@ final class PetView: NSView {
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
-        guard state != .waking, state != .alerting else { return }
+        guard state != .waking else { return }
         setState(.jumping)
         emoteOverlay.setKind(.none)
         jumpArc.trigger()
@@ -151,7 +156,7 @@ final class PetView: NSView {
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
-        guard state != .waking, state != .alerting else { return }
+        guard state != .waking else { return }
         setState(.succeeding)
         emoteOverlay.setKind(.none)
         successTimer.trigger()
@@ -164,7 +169,7 @@ final class PetView: NSView {
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
-        guard state != .waking, state != .alerting else { return }
+        guard state != .waking else { return }
         setState(.failing)
         emoteOverlay.setKind(.none)
         failTimer.trigger()
