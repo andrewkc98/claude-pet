@@ -28,8 +28,9 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.andrewtucker.ClaudePet
         MACOSX_DEPLOYMENT_TARGET: "13.0"
         SWIFT_VERSION: "5.0"
-        CODE_SIGN_STYLE: Automatic
-        ENABLE_HARDENED_RUNTIME: false
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"
+        ENABLE_HARDENED_RUNTIME: true
         GENERATE_INFOPLIST_FILE: false
   petsend:
     type: tool
@@ -41,4 +42,5 @@ targets:
         PRODUCT_NAME: petsend
         MACOSX_DEPLOYMENT_TARGET: "13.0"
         SWIFT_VERSION: "5.0"
-        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"

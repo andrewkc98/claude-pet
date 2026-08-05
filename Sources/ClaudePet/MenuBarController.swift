@@ -17,6 +17,7 @@ final class MenuBarController {
         ("30 minutes", 30 * 60),
     ]
     private var selectedSleepTimeout: TimeInterval
+    private var launchAtLoginItem: NSMenuItem?
 
     init(
         defaultSleepTimeout: TimeInterval,
@@ -63,6 +64,14 @@ final class MenuBarController {
 
         menu.addItem(.separator())
 
+        let launchItem = NSMenuItem(title: "Launch at Login", action: #selector(handleToggleLaunchAtLogin), keyEquivalent: "")
+        launchItem.target = self
+        launchItem.state = LaunchAtLogin.isEnabled ? .on : .off
+        menu.addItem(launchItem)
+        launchAtLoginItem = launchItem
+
+        menu.addItem(.separator())
+
         let quitItem = NSMenuItem(title: "Quit ClaudePet", action: #selector(handleQuit), keyEquivalent: "q")
         quitItem.target = self
         menu.addItem(quitItem)
@@ -81,6 +90,12 @@ final class MenuBarController {
             item.state = (item === sender) ? .on : .off
         }
         onSleepTimeoutChange(seconds)
+    }
+
+    @objc private func handleToggleLaunchAtLogin() {
+        let newValue = !LaunchAtLogin.isEnabled
+        LaunchAtLogin.setEnabled(newValue)
+        launchAtLoginItem?.state = LaunchAtLogin.isEnabled ? .on : .off
     }
 
     @objc private func handleQuit() {
