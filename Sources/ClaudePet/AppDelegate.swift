@@ -66,7 +66,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         case .prompt, .tool:
             panel.setThinking()
         case .notify:
-            panel.noteActivity()
+            panel.triggerAlert()
         }
     }
 }

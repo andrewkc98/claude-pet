@@ -44,6 +44,10 @@ final class PetPanel: NSPanel {
         petView?.noteActivity()
     }
 
+    func triggerAlert() {
+        petView?.triggerAlert()
+    }
+
     func setSleepTimeout(_ seconds: TimeInterval) {
         petView?.setSleepTimeout(seconds)
     }

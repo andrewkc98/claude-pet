@@ -17,6 +17,8 @@ targets:
         buildPhase: resources
       - path: Assets/cat_wake.png
         buildPhase: resources
+      - path: Assets/cat_alert.png
+        buildPhase: resources
     info:
       path: Generated/Info.plist
       properties:

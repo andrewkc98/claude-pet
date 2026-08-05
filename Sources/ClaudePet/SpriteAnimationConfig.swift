@@ -43,4 +43,14 @@ enum PetAnimation {
         loops: false,
         duration: 0.6
     )
+
+    /// duration covers only the frames-1-2-3 transition into the held state;
+    /// the held alternation between frames 3/4 is driven separately in PetView.
+    static let alert = SpriteAnimationConfig(
+        resourceName: "cat_alert",
+        frameSize: CGSize(width: 64, height: 64),
+        fps: 0,
+        loops: false,
+        duration: 0.3
+    )
 }

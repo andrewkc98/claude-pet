@@ -8,7 +8,7 @@ enum EmoteKind: Equatable {
     case notify
 }
 
-/// A small pixel-grid overlay (dots, later Zzz / "!") drawn above the pet's head.
+/// A small pixel-grid overlay (dots, "!", later Zzz) drawn above the pet's head.
 /// Stateless like JumpArc — derives its current frame from elapsed wall-clock time
 /// off the existing redraw loop, rather than owning its own timer. Draws procedurally
 /// at integer coordinates; never touches or resamples the body sprite image.
@@ -37,7 +37,9 @@ final class EmoteOverlay {
             return
         case .thinking:
             drawThinkingDots(in: context, anchor: anchor)
-        case .sleep, .notify:
+        case .notify:
+            drawAlertMark(in: context, anchor: anchor)
+        case .sleep:
             return
         }
     }
@@ -57,5 +59,33 @@ final class EmoteOverlay {
             context.setLineWidth(1)
             context.stroke(rect.insetBy(dx: 0.5, dy: 0.5))
         }
+    }
+
+    /// Pops in at t=0 (called exactly when the sprite's intro transition finishes)
+    /// then bobs gently in place — the overlay is what keeps the held alert state
+    /// from reading as frozen, since the sprite's own held frames barely differ.
+    private func drawAlertMark(in context: CGContext, anchor: CGPoint) {
+        let elapsed = CACurrentMediaTime() - startTime
+        let bobOffset = CGFloat((sin(elapsed * 1.5) * 3).rounded())
+
+        let barWidth: CGFloat = 4
+        let barHeight: CGFloat = 10
+        let gap: CGFloat = 2
+        let dotSize: CGFloat = 4
+
+        let x = anchor.x.rounded()
+        let dotY = (anchor.y + bobOffset).rounded()
+        let barY = dotY + dotSize + gap
+
+        let dotRect = CGRect(x: x, y: dotY, width: dotSize, height: dotSize)
+        let barRect = CGRect(x: x, y: barY, width: barWidth, height: barHeight)
+
+        context.setFillColor(fillColor)
+        context.fill(dotRect)
+        context.fill(barRect)
+        context.setStrokeColor(outlineColor)
+        context.setLineWidth(1)
+        context.stroke(dotRect.insetBy(dx: 0.5, dy: 0.5))
+        context.stroke(barRect.insetBy(dx: 0.5, dy: 0.5))
     }
 }

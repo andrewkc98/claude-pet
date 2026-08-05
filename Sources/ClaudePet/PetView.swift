@@ -9,6 +9,12 @@ final class PetView: NSView {
         case jumping
         case sleeping
         case waking
+        case alerting
+    }
+
+    private enum AlertPhase {
+        case transitioning
+        case held
     }
 
     var onDragEnded: ((NSPoint) -> Void)?
@@ -20,25 +26,35 @@ final class PetView: NSView {
     private let jumpSheet: SpriteSheet?
     private let sleepSheet: SpriteSheet?
     private let wakeSheet: SpriteSheet?
+    private let alertSheet: SpriteSheet?
 
     private var frameIndex = 0
     private var animationTimer: Timer?
 
     private let jumpArc = JumpArc(duration: PetAnimation.jump.duration ?? 0.7)
     private let wakeTimer = PlayOnceTimer(duration: PetAnimation.wake.duration ?? 0.6)
+    private let alertIntroTimer = PlayOnceTimer(duration: PetAnimation.alert.duration ?? 0.3)
     private let emoteOverlay = EmoteOverlay()
     private var state: State = .idle
+    private var alertPhase: AlertPhase = .transitioning
+    private var alertHoldStartTime: CFTimeInterval = 0
+    private let alertHoldFrameInterval: CFTimeInterval = 1.0
 
     private var lastActivityTime = CFAbsoluteTimeGetCurrent()
     private var sleepTimeout: TimeInterval = 5 * 60
 
     private static let emoteAnchor = CGPoint(x: 72, y: 96)
+    // In the headroom above the 128pt sprite (sprite occupies y 0...128).
+    // Same x as the thinking-dots anchor — that one's already tuned to sit
+    // over the head (cat faces right), just projected up into the headroom.
+    private static let alertEmoteAnchor = CGPoint(x: 72, y: 132)
 
     override init(frame frameRect: NSRect) {
         idleSheet = SpriteSheet(resourceName: PetAnimation.idle.resourceName, frameSize: PetAnimation.idle.frameSize)
         jumpSheet = SpriteSheet(resourceName: PetAnimation.jump.resourceName, frameSize: PetAnimation.jump.frameSize)
         sleepSheet = SpriteSheet(resourceName: PetAnimation.sleep.resourceName, frameSize: PetAnimation.sleep.frameSize)
         wakeSheet = SpriteSheet(resourceName: PetAnimation.wake.resourceName, frameSize: PetAnimation.wake.frameSize)
+        alertSheet = SpriteSheet(resourceName: PetAnimation.alert.resourceName, frameSize: PetAnimation.alert.frameSize)
         super.init(frame: frameRect)
         startAnimationTimer()
     }
@@ -48,6 +64,7 @@ final class PetView: NSView {
         jumpSheet = SpriteSheet(resourceName: PetAnimation.jump.resourceName, frameSize: PetAnimation.jump.frameSize)
         sleepSheet = SpriteSheet(resourceName: PetAnimation.sleep.resourceName, frameSize: PetAnimation.sleep.frameSize)
         wakeSheet = SpriteSheet(resourceName: PetAnimation.wake.resourceName, frameSize: PetAnimation.wake.frameSize)
+        alertSheet = SpriteSheet(resourceName: PetAnimation.alert.resourceName, frameSize: PetAnimation.alert.frameSize)
         super.init(coder: coder)
         startAnimationTimer()
     }
@@ -60,7 +77,7 @@ final class PetView: NSView {
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
-        guard state != .jumping, state != .waking else { return }
+        guard state != .jumping, state != .waking, state != .alerting else { return }
         setState(.thinking)
         emoteOverlay.setKind(.thinking)
     }
@@ -71,20 +88,37 @@ final class PetView: NSView {
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
-        guard state != .waking else { return }
+        guard state != .waking, state != .alerting else { return }
         setState(.jumping)
         emoteOverlay.setKind(.none)
         jumpArc.trigger()
     }
 
-    /// For events with no dedicated visual yet (e.g. notify): still counts as
-    /// activity for the sleep timer, and still wakes the pet if it's asleep.
+    /// For events with no dedicated visual yet (e.g. a Cowork prompt-sent tick
+    /// while something else is showing): still counts as activity for the sleep
+    /// timer, and still wakes the pet if it's asleep.
     func noteActivity() {
         if state == .sleeping {
             beginWaking()
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
+    }
+
+    /// An alert blocks other visuals until acknowledged (clicked). Plays the
+    /// frames-1-2-3 transition once, then holds on frames 3/4 with the overlay
+    /// supplying the visual interest until dismissed.
+    func triggerAlert() {
+        if state == .sleeping {
+            beginWaking()
+            return
+        }
+        lastActivityTime = CFAbsoluteTimeGetCurrent()
+        guard state != .waking else { return }
+        setState(.alerting)
+        alertPhase = .transitioning
+        emoteOverlay.setKind(.none)
+        alertIntroTimer.trigger()
     }
 
     func setSleepTimeout(_ seconds: TimeInterval) {
@@ -103,6 +137,13 @@ final class PetView: NSView {
         setState(.waking)
         emoteOverlay.setKind(.none)
         wakeTimer.trigger()
+        lastActivityTime = CFAbsoluteTimeGetCurrent()
+    }
+
+    private func dismissAlert() {
+        guard state == .alerting else { return }
+        setState(.idle)
+        emoteOverlay.setKind(.none)
         lastActivityTime = CFAbsoluteTimeGetCurrent()
     }
 
@@ -137,8 +178,8 @@ final class PetView: NSView {
             if let sheet = sleepSheet, !sheet.frames.isEmpty {
                 frameIndex = (frameIndex + 1) % sheet.frames.count
             }
-        case .jumping, .waking:
-            break // frame index is derived from progress() in draw(), not ticked here
+        case .jumping, .waking, .alerting:
+            break // frame index is derived from progress()/elapsed time in draw(), not ticked here
         }
 
         needsDisplay = true
@@ -160,12 +201,13 @@ final class PetView: NSView {
         context.interpolationQuality = .none
         context.draw(sheet.frames[clampedIndex], in: spriteRect)
 
-        let anchor = CGPoint(x: Self.emoteAnchor.x, y: Self.emoteAnchor.y + verticalOffset)
+        let baseAnchor = (state == .alerting) ? Self.alertEmoteAnchor : Self.emoteAnchor
+        let anchor = CGPoint(x: baseAnchor.x, y: baseAnchor.y + verticalOffset)
         emoteOverlay.draw(in: context, anchor: anchor)
     }
 
     /// Resolves (sheet, frame index, vertical offset) for the current state,
-    /// and advances play-once states (jumping/waking) toward idle as a side effect.
+    /// and advances play-once states (jumping/waking/alerting) as a side effect.
     private func currentFrame() -> (SpriteSheet?, Int, CGFloat) {
         switch state {
         case .idle, .thinking:
@@ -192,12 +234,36 @@ final class PetView: NSView {
             let count = wakeSheet?.frames.count ?? 1
             let index = min(Int(progress * CGFloat(count)), count - 1)
             return (wakeSheet, index, 0)
+
+        case .alerting:
+            return (alertSheet, alertFrameIndex(), 0)
+        }
+    }
+
+    private func alertFrameIndex() -> Int {
+        let count = alertSheet?.frames.count ?? 4
+        switch alertPhase {
+        case .transitioning:
+            let progress = alertIntroTimer.progress()
+            if !alertIntroTimer.isActive {
+                alertPhase = .held
+                alertHoldStartTime = CACurrentMediaTime()
+                emoteOverlay.setKind(.notify) // pop-in, right as the transition ends
+            }
+            return min(Int(progress * 3), 2)
+        case .held:
+            let elapsed = CACurrentMediaTime() - alertHoldStartTime
+            let toggled = Int(elapsed / alertHoldFrameInterval) % 2 == 0
+            return toggled ? min(2, count - 1) : min(3, count - 1)
         }
     }
 
     // MARK: - Drag
 
     override func mouseDown(with event: NSEvent) {
+        if state == .alerting {
+            dismissAlert()
+        }
         noteActivity()
         dragStartMouseLocation = NSEvent.mouseLocation
         dragStartFrameOrigin = window?.frame.origin ?? .zero

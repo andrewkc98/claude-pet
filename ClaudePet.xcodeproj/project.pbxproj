@@ -13,6 +13,7 @@
 		59937FB17FF43CA8D301674F /* PetPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABAE77ECA7F970DE91EBB5B /* PetPanel.swift */; };
 		5C5971E49E13399142A6337F /* PetEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DB24D20BFAAF1AF9525DC6 /* PetEvent.swift */; };
 		5EB5104FAEE1191915CD5E69 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC49A09C13872D0584B5730E /* main.swift */; };
+		6EF8AC348B129B294BABDA90 /* cat_alert.png in Resources */ = {isa = PBXBuildFile; fileRef = 329E59631916F8DA86F78F58 /* cat_alert.png */; };
 		71C92F632266EFDBA8AF83AE /* cat_sleep_v2_calm.png in Resources */ = {isa = PBXBuildFile; fileRef = 9F51E6E899D0792032C0D57B /* cat_sleep_v2_calm.png */; };
 		732AF201EF5320442B9BBF97 /* SpriteAnimationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3750F6B484ED37F5DE2BC15D /* SpriteAnimationConfig.swift */; };
 		835F3B1D2BC2CB2ACAC021E8 /* PetPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F0C44EB3412094D80FD9EB /* PetPositionStore.swift */; };
@@ -35,6 +36,7 @@
 		0BCE5CA61392B67B556978A1 /* cat_idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_idle.png; sourceTree = "<group>"; };
 		194084EE1015AB2A2945F983 /* NSScreen+PersistentID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSScreen+PersistentID.swift"; sourceTree = "<group>"; };
 		260DB44C7F7AC05E4E03BDBB /* EmoteOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmoteOverlay.swift; sourceTree = "<group>"; };
+		329E59631916F8DA86F78F58 /* cat_alert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_alert.png; sourceTree = "<group>"; };
 		3750F6B484ED37F5DE2BC15D /* SpriteAnimationConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAnimationConfig.swift; sourceTree = "<group>"; };
 		3AC86D3F782EF232DCD146EE /* SocketServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketServer.swift; sourceTree = "<group>"; };
 		3E04E885AF6FB7EC0C1215F5 /* PlayOnceTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayOnceTimer.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 		648FEC631F5BD14EE9B831A5 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				329E59631916F8DA86F78F58 /* cat_alert.png */,
 				0BCE5CA61392B67B556978A1 /* cat_idle.png */,
 				CEEF0AE054642B6C57A817C1 /* cat_jump.png */,
 				9F51E6E899D0792032C0D57B /* cat_sleep_v2_calm.png */,
@@ -200,6 +203,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EF8AC348B129B294BABDA90 /* cat_alert.png in Resources */,
 				8B5F1416178DA77D3A7B41D8 /* cat_idle.png in Resources */,
 				215D215BCD22B7B3C34952B0 /* cat_jump.png in Resources */,
 				71C92F632266EFDBA8AF83AE /* cat_sleep_v2_calm.png in Resources */,
