@@ -34,6 +34,8 @@ final class PetView: NSView {
 
     private var frameIndex = 0
     private var animationTimer: Timer?
+    private var lastIdleFrameAdvance: CFTimeInterval = 0
+    private var lastSleepFrameAdvance: CFTimeInterval = 0
 
     private let jumpArc = JumpArc(duration: PetAnimation.jump.duration ?? 0.7)
     private let wakeTimer = PlayOnceTimer(duration: PetAnimation.wake.duration ?? 0.6)
@@ -185,6 +187,9 @@ final class PetView: NSView {
         guard newState != state else { return }
         state = newState
         frameIndex = 0
+        let now = CACurrentMediaTime()
+        lastIdleFrameAdvance = now
+        lastSleepFrameAdvance = now
     }
 
     private func beginWaking() {
@@ -216,20 +221,29 @@ final class PetView: NSView {
     private func tick() {
         checkSleepTimeout()
 
+        let now = CACurrentMediaTime()
         switch state {
         case .idle, .thinking:
-            if let sheet = idleSheet, !sheet.frames.isEmpty {
-                frameIndex = (frameIndex + 1) % sheet.frames.count
-            }
+            advanceFrameIfDue(sheet: idleSheet, fps: PetAnimation.idle.fps, lastAdvance: &lastIdleFrameAdvance, now: now)
         case .sleeping:
-            if let sheet = sleepSheet, !sheet.frames.isEmpty {
-                frameIndex = (frameIndex + 1) % sheet.frames.count
-            }
+            advanceFrameIfDue(sheet: sleepSheet, fps: PetAnimation.sleep.fps, lastAdvance: &lastSleepFrameAdvance, now: now)
         case .jumping, .waking, .alerting, .succeeding, .failing:
             break // frame index is derived from progress()/elapsed time in draw(), not ticked here
         }
 
         needsDisplay = true
+    }
+
+    /// The master timer ticks at idle's rate (fast enough for smooth arcs/
+    /// overlays in other states), but each looping sheet only advances its
+    /// own frame at its own configured fps — sleep.fps was previously defined
+    /// and never actually consulted, so sleep always played at idle's rate.
+    private func advanceFrameIfDue(sheet: SpriteSheet?, fps: Double, lastAdvance: inout CFTimeInterval, now: CFTimeInterval) {
+        guard let sheet, !sheet.frames.isEmpty, fps > 0 else { return }
+        let frameDuration = 1.0 / fps
+        guard now - lastAdvance >= frameDuration else { return }
+        frameIndex = (frameIndex + 1) % sheet.frames.count
+        lastAdvance = now
     }
 
     override func draw(_ dirtyRect: NSRect) {

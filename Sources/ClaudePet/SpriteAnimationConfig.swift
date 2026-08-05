@@ -31,7 +31,7 @@ enum PetAnimation {
     static let sleep = SpriteAnimationConfig(
         resourceName: "cat_sleep_v2_calm",
         frameSize: CGSize(width: 64, height: 64),
-        fps: 4,
+        fps: 1.5,
         loops: true,
         duration: nil
     )
