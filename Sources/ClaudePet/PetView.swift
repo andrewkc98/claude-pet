@@ -194,13 +194,6 @@ final class PetView: NSView {
         lastActivityTime = CFAbsoluteTimeGetCurrent()
     }
 
-    private func dismissAlert() {
-        guard state == .alerting else { return }
-        setState(.idle)
-        emoteOverlay.setKind(.none)
-        lastActivityTime = CFAbsoluteTimeGetCurrent()
-    }
-
     private func checkSleepTimeout() {
         guard state == .idle else { return }
         let elapsed = CFAbsoluteTimeGetCurrent() - lastActivityTime
@@ -332,11 +325,12 @@ final class PetView: NSView {
 
     // MARK: - Drag
 
+    /// A click wakes the pet if it's asleep (handled inside triggerJump's own
+    /// sleeping check); any other click jumps — including one that clears an
+    /// active alert, since triggerJump() already transitions cleanly out of
+    /// .alerting the same way real activity does.
     override func mouseDown(with event: NSEvent) {
-        if state == .alerting {
-            dismissAlert()
-        }
-        noteActivity()
+        triggerJump()
         dragStartMouseLocation = NSEvent.mouseLocation
         dragStartFrameOrigin = window?.frame.origin ?? .zero
     }
