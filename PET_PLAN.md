@@ -87,18 +87,31 @@ loader** — retrofitting a different layout is the #1 time sink here.
 
 ### D. Emitters
 
-**1. Claude Code hooks** — global config, `~/.claude/settings.json`:
+**1. Claude Code hooks** — global config, `~/.claude/settings.json`. This is what's actually
+installed, not just the original sketch — kept in sync here since the live file lives outside
+this repo and would otherwise be silently lost on a fresh machine or a settings reset:
 
 ```json
 {
   "hooks": {
-    "UserPromptSubmit": [{"hooks":[{"type":"command","command":"petsend prompt claude-code"}]}],
-    "PostToolUse":      [{"matcher":"*","hooks":[{"type":"command","command":"petsend tool claude-code"}]}],
-    "Stop":             [{"hooks":[{"type":"command","command":"petsend done claude-code"}]}],
-    "Notification":     [{"hooks":[{"type":"command","command":"petsend notify claude-code"}]}]
+    "UserPromptSubmit": [{"hooks":[{"type":"command","command":"~/.claudepet/bin/petsend prompt claude-code"}]}],
+    "PostToolUse":      [{"matcher":"*","hooks":[{"type":"command","command":"~/.claudepet/bin/petsend tool claude-code"}]}],
+    "Stop":             [{"hooks":[{"type":"command","command":"~/.claudepet/bin/petsend done claude-code"}]}],
+    "Notification":     [{"hooks":[{"type":"command","command":"~/.claudepet/bin/petsend notify claude-code"}]}],
+    "PreToolUse":       [{"matcher":"AskUserQuestion","hooks":[{"type":"command","command":"~/.claudepet/bin/petsend notify claude-code"}]}]
   }
 }
 ```
+
+`petsend` is built and copied to `~/.claudepet/bin/petsend` (see project.yml's `petsend` target) —
+hooks reference that stable path, not the ephemeral Xcode DerivedData build output.
+
+**Why `PreToolUse` too:** `Notification` alone covers genuine permission prompts and idle-timeout
+nudges, but empirically does *not* fire for `AskUserQuestion` — confirmed by dumping hook payloads
+with no piped `stdin` at all reaching a debug hook wired there. Since a pending `AskUserQuestion`
+is arguably the single most common "Claude needs you" moment in practice, `PreToolUse` scoped to
+that one tool name fires the same alert right as the question is posed, before the tool blocks
+waiting on a reply.
 
 `petsend` = ~30-line Swift or Go binary: connect to socket, write one line, close, exit 0.
 **Must always exit 0 and never block** — a hook that hangs hangs Claude Code. Add a 200ms
