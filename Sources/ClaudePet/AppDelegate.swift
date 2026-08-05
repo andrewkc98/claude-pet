@@ -16,6 +16,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             reason: "Keep pet animation running while backgrounded"
         )
 
+        installPetsendIfNeeded()
+
         panel = PetPanel()
         panel.setSleepTimeout(Self.defaultSleepTimeout)
         panel.makeKeyAndOrderFront(nil)
@@ -66,6 +68,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
         watcher.start()
         coworkWatcher = watcher
+    }
+
+    /// Copies the petsend CLI bundled in the app's Resources out to its
+    /// stable, hook-referenced path. Always overwrites rather than only
+    /// installing once, so an app update also updates the CLI (e.g. the
+    /// transcript_path support added after petsend originally shipped) —
+    /// safe on macOS to overwrite a binary while another copy of it is
+    /// mid-execution from a concurrent hook invocation.
+    private func installPetsendIfNeeded() {
+        guard let bundledPetsend = Bundle.main.url(forResource: "petsend", withExtension: nil) else { return }
+
+        let fm = FileManager.default
+        let targetDir = NSString(string: "~/.claudepet/bin").expandingTildeInPath
+        let targetPath = (targetDir as NSString).appendingPathComponent("petsend")
+
+        try? fm.createDirectory(atPath: targetDir, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
+        try? fm.removeItem(atPath: targetPath)
+        try? fm.copyItem(at: bundledPetsend, to: URL(fileURLWithPath: targetPath))
+        try? fm.setAttributes([.posixPermissions: 0o755], ofItemAtPath: targetPath)
     }
 
     private func handle(_ event: PetEvent) {

@@ -25,6 +25,20 @@ targets:
         buildPhase: resources
       - path: Assets/cat_think_long.png
         buildPhase: resources
+    dependencies:
+      - target: petsend
+        embed: false
+    postCompileScripts:
+      - name: "Embed petsend CLI"
+        script: |
+          set -e
+          mkdir -p "$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources"
+          cp "$BUILT_PRODUCTS_DIR/petsend" "$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources/petsend"
+          chmod +x "$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources/petsend"
+        inputFiles:
+          - $BUILT_PRODUCTS_DIR/petsend
+        outputFiles:
+          - $BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources/petsend
     info:
       path: Generated/Info.plist
       properties:
