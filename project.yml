@@ -19,6 +19,10 @@ targets:
         buildPhase: resources
       - path: Assets/cat_alert.png
         buildPhase: resources
+      - path: Assets/cat_success.png
+        buildPhase: resources
+      - path: Assets/cat_fail.png
+        buildPhase: resources
     info:
       path: Generated/Info.plist
       properties:

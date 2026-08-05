@@ -10,6 +10,8 @@ final class PetView: NSView {
         case sleeping
         case waking
         case alerting
+        case succeeding
+        case failing
     }
 
     private enum AlertPhase {
@@ -27,6 +29,8 @@ final class PetView: NSView {
     private let sleepSheet: SpriteSheet?
     private let wakeSheet: SpriteSheet?
     private let alertSheet: SpriteSheet?
+    private let successSheet: SpriteSheet?
+    private let failSheet: SpriteSheet?
 
     private var frameIndex = 0
     private var animationTimer: Timer?
@@ -34,6 +38,8 @@ final class PetView: NSView {
     private let jumpArc = JumpArc(duration: PetAnimation.jump.duration ?? 0.7)
     private let wakeTimer = PlayOnceTimer(duration: PetAnimation.wake.duration ?? 0.6)
     private let alertIntroTimer = PlayOnceTimer(duration: PetAnimation.alert.duration ?? 0.3)
+    private let successTimer = PlayOnceTimer(duration: PetAnimation.success.duration ?? 0.7)
+    private let failTimer = PlayOnceTimer(duration: PetAnimation.fail.duration ?? 0.7)
     private let emoteOverlay = EmoteOverlay()
     private var state: State = .idle
     private var alertPhase: AlertPhase = .transitioning
@@ -55,6 +61,8 @@ final class PetView: NSView {
         sleepSheet = SpriteSheet(resourceName: PetAnimation.sleep.resourceName, frameSize: PetAnimation.sleep.frameSize)
         wakeSheet = SpriteSheet(resourceName: PetAnimation.wake.resourceName, frameSize: PetAnimation.wake.frameSize)
         alertSheet = SpriteSheet(resourceName: PetAnimation.alert.resourceName, frameSize: PetAnimation.alert.frameSize)
+        successSheet = SpriteSheet(resourceName: PetAnimation.success.resourceName, frameSize: PetAnimation.success.frameSize)
+        failSheet = SpriteSheet(resourceName: PetAnimation.fail.resourceName, frameSize: PetAnimation.fail.frameSize)
         super.init(frame: frameRect)
         startAnimationTimer()
     }
@@ -65,11 +73,26 @@ final class PetView: NSView {
         sleepSheet = SpriteSheet(resourceName: PetAnimation.sleep.resourceName, frameSize: PetAnimation.sleep.frameSize)
         wakeSheet = SpriteSheet(resourceName: PetAnimation.wake.resourceName, frameSize: PetAnimation.wake.frameSize)
         alertSheet = SpriteSheet(resourceName: PetAnimation.alert.resourceName, frameSize: PetAnimation.alert.frameSize)
+        successSheet = SpriteSheet(resourceName: PetAnimation.success.resourceName, frameSize: PetAnimation.success.frameSize)
+        failSheet = SpriteSheet(resourceName: PetAnimation.fail.resourceName, frameSize: PetAnimation.fail.frameSize)
         super.init(coder: coder)
         startAnimationTimer()
     }
 
     // MARK: - External triggers
+
+    /// States representing a brief, self-terminating reaction that should be
+    /// allowed to finish playing rather than getting cut short by the next
+    /// prompt/tool event — which, during an active turn, can arrive within
+    /// milliseconds of the reaction starting.
+    private var isInProtectedReaction: Bool {
+        switch state {
+        case .jumping, .waking, .alerting, .succeeding, .failing:
+            return true
+        case .idle, .thinking, .sleeping:
+            return false
+        }
+    }
 
     func setThinking() {
         if state == .sleeping {
@@ -77,7 +100,7 @@ final class PetView: NSView {
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
-        guard state != .jumping, state != .waking, state != .alerting else { return }
+        guard !isInProtectedReaction else { return }
         setState(.thinking)
         emoteOverlay.setKind(.thinking)
     }
@@ -119,6 +142,32 @@ final class PetView: NSView {
         alertPhase = .transitioning
         emoteOverlay.setKind(.none)
         alertIntroTimer.trigger()
+    }
+
+    /// The done-reaction for a turn that completed with no tool errors.
+    func triggerSuccess() {
+        if state == .sleeping {
+            beginWaking()
+            return
+        }
+        lastActivityTime = CFAbsoluteTimeGetCurrent()
+        guard state != .waking, state != .alerting else { return }
+        setState(.succeeding)
+        emoteOverlay.setKind(.none)
+        successTimer.trigger()
+    }
+
+    /// The done-reaction for a turn where at least one tool call errored.
+    func triggerFail() {
+        if state == .sleeping {
+            beginWaking()
+            return
+        }
+        lastActivityTime = CFAbsoluteTimeGetCurrent()
+        guard state != .waking, state != .alerting else { return }
+        setState(.failing)
+        emoteOverlay.setKind(.none)
+        failTimer.trigger()
     }
 
     func setSleepTimeout(_ seconds: TimeInterval) {
@@ -178,7 +227,7 @@ final class PetView: NSView {
             if let sheet = sleepSheet, !sheet.frames.isEmpty {
                 frameIndex = (frameIndex + 1) % sheet.frames.count
             }
-        case .jumping, .waking, .alerting:
+        case .jumping, .waking, .alerting, .succeeding, .failing:
             break // frame index is derived from progress()/elapsed time in draw(), not ticked here
         }
 
@@ -237,6 +286,24 @@ final class PetView: NSView {
 
         case .alerting:
             return (alertSheet, alertFrameIndex(), 0)
+
+        case .succeeding:
+            let progress = successTimer.progress()
+            if !successTimer.isActive {
+                setState(.idle)
+            }
+            let count = successSheet?.frames.count ?? 1
+            let index = min(Int(progress * CGFloat(count)), count - 1)
+            return (successSheet, index, 0)
+
+        case .failing:
+            let progress = failTimer.progress()
+            if !failTimer.isActive {
+                setState(.idle)
+            }
+            let count = failSheet?.frames.count ?? 1
+            let index = min(Int(progress * CGFloat(count)), count - 1)
+            return (failSheet, index, 0)
         }
     }
 

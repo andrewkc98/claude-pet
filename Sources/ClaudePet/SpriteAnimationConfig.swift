@@ -53,4 +53,20 @@ enum PetAnimation {
         loops: false,
         duration: 0.3
     )
+
+    static let success = SpriteAnimationConfig(
+        resourceName: "cat_success",
+        frameSize: CGSize(width: 64, height: 64),
+        fps: 0,
+        loops: false,
+        duration: 1.5
+    )
+
+    static let fail = SpriteAnimationConfig(
+        resourceName: "cat_fail",
+        frameSize: CGSize(width: 64, height: 64),
+        fps: 0,
+        loops: false,
+        duration: 1.5
+    )
 }

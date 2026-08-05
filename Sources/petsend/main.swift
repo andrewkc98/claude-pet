@@ -31,7 +31,28 @@ func jsonEscape(_ s: String) -> String {
     return result
 }
 
+/// Claude Code pipes the hook's JSON payload over stdin. We only care about
+/// `transcript_path`, forwarded so the pet can check the transcript for tool
+/// errors. Guarded by isatty so running `petsend` by hand from a terminal
+/// (no piped stdin) never blocks waiting on input.
+func readTranscriptPathFromStdin() -> String? {
+    guard isatty(STDIN_FILENO) == 0 else { return nil }
+
+    let maxBytes = 65536
+    var data = Data()
+    var buffer = [UInt8](repeating: 0, count: 4096)
+    while data.count < maxBytes {
+        let n = read(STDIN_FILENO, &buffer, buffer.count)
+        if n <= 0 { break }
+        data.append(contentsOf: buffer[0..<n])
+    }
+    guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
+    return json["transcript_path"] as? String
+}
+
 func sendEvent() {
+    let transcriptPath = readTranscriptPathFromStdin()
+
     let socketPath = NSString(string: "~/.claudepet/pet.sock").expandingTildeInPath
 
     let fd = socket(AF_UNIX, SOCK_STREAM, 0)
@@ -55,7 +76,12 @@ func sendEvent() {
     guard connectResult == 0 else { return }
 
     let ts = Int(Date().timeIntervalSince1970)
-    let json = "{\"event\":\"\(jsonEscape(eventType))\",\"source\":\"\(jsonEscape(source))\",\"ts\":\(ts)}\n"
+    var json = "{\"event\":\"\(jsonEscape(eventType))\",\"source\":\"\(jsonEscape(source))\",\"ts\":\(ts)"
+    if let transcriptPath {
+        json += ",\"transcript_path\":\"\(jsonEscape(transcriptPath))\""
+    }
+    json += "}\n"
+
     guard let data = json.data(using: .utf8) else { return }
     _ = data.withUnsafeBytes { rawBuffer in
         write(fd, rawBuffer.baseAddress, rawBuffer.count)

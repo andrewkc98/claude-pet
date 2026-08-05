@@ -8,22 +8,29 @@ import CoreServices
 /// JSONL files for structured turn-start/turn-completion records:
 ///   - {"type":"user", ...}                          → prompt sent (thinking)
 ///   - {"type":"assistant", message.stop_reason:
-///       "end_turn", ...}                            → turn finished (jump)
+///       "end_turn", ...}                            → turn finished (success/fail)
 ///   - {"type":"result", ...}                         → also treated as finished
 ///     (seen in some audit.jsonl-style logs, kept as a second completion shape)
-/// We only ever inspect `type`/`stop_reason` fields; message content is never
-/// read into memory beyond that check, logged, or transmitted.
+/// Success vs. failure is decided by scanning for a raw `"is_error":true`
+/// byte marker in everything written since the last prompt — same technique
+/// as SessionErrorDetector uses for the Claude Code CLI path, just tracked
+/// incrementally here since this class already tails the file. We only ever
+/// inspect `type`/`stop_reason` fields and this one fixed marker string;
+/// message content is never read into memory beyond that, logged, or
+/// transmitted.
 final class CoworkWatcher {
     private let watchPath: String
     private let onPromptSent: () -> Void
-    private let onDone: () -> Void
+    private let onDone: (Bool) -> Void
 
     private var stream: FSEventStreamRef?
     private var fileOffsets: [String: UInt64] = [:]
+    private var errorSeenSincePrompt: [String: Bool] = [:]
     private let stateLock = NSLock()
     private let maxLineLength = 1_000_000
+    private let errorMarker = Data("\"is_error\":true".utf8)
 
-    init(watchPath: String, onPromptSent: @escaping () -> Void, onDone: @escaping () -> Void) {
+    init(watchPath: String, onPromptSent: @escaping () -> Void, onDone: @escaping (Bool) -> Void) {
         self.watchPath = watchPath
         self.onPromptSent = onPromptSent
         self.onDone = onDone
@@ -113,15 +120,30 @@ final class CoworkWatcher {
         stateLock.unlock()
 
         for line in newData.split(separator: UInt8(ascii: "\n")) where line.count < maxLineLength {
-            guard let json = try? JSONSerialization.jsonObject(with: Data(line)) as? [String: Any],
+            let lineData = Data(line)
+
+            if lineData.range(of: errorMarker) != nil {
+                stateLock.lock()
+                errorSeenSincePrompt[path] = true
+                stateLock.unlock()
+            }
+
+            guard let json = try? JSONSerialization.jsonObject(with: lineData) as? [String: Any],
                   let type = json["type"] as? String else {
                 continue
             }
 
             if type == "user" {
+                stateLock.lock()
+                errorSeenSincePrompt[path] = false
+                stateLock.unlock()
                 onPromptSent()
             } else if isCompletionRecord(type: type, json: json) {
-                onDone()
+                stateLock.lock()
+                let hadError = errorSeenSincePrompt[path] ?? false
+                errorSeenSincePrompt[path] = false
+                stateLock.unlock()
+                onDone(hadError)
             }
         }
     }
