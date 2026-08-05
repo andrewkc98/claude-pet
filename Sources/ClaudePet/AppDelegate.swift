@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var menuBar: MenuBarController!
     private var activityToken: NSObjectProtocol?
     private var socketServer: SocketServer?
+    private var coworkWatcher: CoworkWatcher?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         activityToken = ProcessInfo.processInfo.beginActivity(
@@ -39,6 +40,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         server.start()
         socketServer = server
+
+        let coworkPath = NSString(string: "~/Library/Application Support/Claude/local-agent-mode-sessions").expandingTildeInPath
+        let watcher = CoworkWatcher(
+            watchPath: coworkPath,
+            onPromptSent: { [weak self] in
+                DispatchQueue.main.async {
+                    self?.panel.setThinking()
+                }
+            },
+            onDone: { [weak self] in
+                DispatchQueue.main.async {
+                    self?.panel.triggerJump()
+                }
+            }
+        )
+        watcher.start()
+        coworkWatcher = watcher
     }
 
     private func handle(_ event: PetEvent) {
