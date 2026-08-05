@@ -4,6 +4,7 @@ import QuartzCore
 enum EmoteKind: Equatable {
     case none
     case thinking
+    case thinkingLong
     case sleep
     case notify
 }
@@ -17,6 +18,7 @@ final class EmoteOverlay {
     private var startTime: CFTimeInterval = 0
 
     private let thinkingFPS: Double = 2.0
+    private let thinkingLongFPS: Double = 0.8
     private let dotSize: CGFloat = 4
     private let dotSpacing: CGFloat = 8
 
@@ -36,7 +38,9 @@ final class EmoteOverlay {
         case .none:
             return
         case .thinking:
-            drawThinkingDots(in: context, anchor: anchor)
+            drawThinkingDots(in: context, anchor: anchor, fps: thinkingFPS)
+        case .thinkingLong:
+            drawThinkingDots(in: context, anchor: anchor, fps: thinkingLongFPS)
         case .notify:
             drawAlertMark(in: context, anchor: anchor)
         case .sleep:
@@ -44,9 +48,9 @@ final class EmoteOverlay {
         }
     }
 
-    private func drawThinkingDots(in context: CGContext, anchor: CGPoint) {
+    private func drawThinkingDots(in context: CGContext, anchor: CGPoint, fps: Double) {
         let elapsed = CACurrentMediaTime() - startTime
-        let frame = Int(elapsed * thinkingFPS)
+        let frame = Int(elapsed * fps)
         let visibleDots = (frame % 3) + 1
 
         for i in 0..<visibleDots {

@@ -10,6 +10,7 @@
 		215D215BCD22B7B3C34952B0 /* cat_jump.png in Resources */ = {isa = PBXBuildFile; fileRef = CEEF0AE054642B6C57A817C1 /* cat_jump.png */; };
 		375E2750C09530D2AC18224C /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6491972415601740D409B7EB /* MenuBarController.swift */; };
 		38C7539E6CA764BE2FD73B40 /* SocketServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC86D3F782EF232DCD146EE /* SocketServer.swift */; };
+		495A708A2C37A5C92B68E089 /* cat_think_long.png in Resources */ = {isa = PBXBuildFile; fileRef = D059A6A07C2A5AE9F8552604 /* cat_think_long.png */; };
 		59937FB17FF43CA8D301674F /* PetPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABAE77ECA7F970DE91EBB5B /* PetPanel.swift */; };
 		5C5971E49E13399142A6337F /* PetEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DB24D20BFAAF1AF9525DC6 /* PetEvent.swift */; };
 		5EB5104FAEE1191915CD5E69 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC49A09C13872D0584B5730E /* main.swift */; };
@@ -57,6 +58,7 @@
 		B0F0C44EB3412094D80FD9EB /* PetPositionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetPositionStore.swift; sourceTree = "<group>"; };
 		C6CC7084260E60FBBB882B22 /* cat_wake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_wake.png; sourceTree = "<group>"; };
 		CEEF0AE054642B6C57A817C1 /* cat_jump.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_jump.png; sourceTree = "<group>"; };
+		D059A6A07C2A5AE9F8552604 /* cat_think_long.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_think_long.png; sourceTree = "<group>"; };
 		E0A9AFB953063E428D051764 /* cat_fail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_fail.png; sourceTree = "<group>"; };
 		EABAE77ECA7F970DE91EBB5B /* PetPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetPanel.swift; sourceTree = "<group>"; };
 		EB28080EEB892DA74EB80B28 /* CoworkWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoworkWatcher.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				CEEF0AE054642B6C57A817C1 /* cat_jump.png */,
 				9F51E6E899D0792032C0D57B /* cat_sleep_v2_calm.png */,
 				95C0290AE14C1305FEBBCA05 /* cat_success.png */,
+				D059A6A07C2A5AE9F8552604 /* cat_think_long.png */,
 				C6CC7084260E60FBBB882B22 /* cat_wake.png */,
 			);
 			path = Assets;
@@ -218,6 +221,7 @@
 				215D215BCD22B7B3C34952B0 /* cat_jump.png in Resources */,
 				71C92F632266EFDBA8AF83AE /* cat_sleep_v2_calm.png in Resources */,
 				B334D9C7B3F767B51E4F4752 /* cat_success.png in Resources */,
+				495A708A2C37A5C92B68E089 /* cat_think_long.png in Resources */,
 				8F388DC2C45540505E0AEF49 /* cat_wake.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

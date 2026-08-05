@@ -31,11 +31,16 @@ final class PetView: NSView {
     private let alertSheet: SpriteSheet?
     private let successSheet: SpriteSheet?
     private let failSheet: SpriteSheet?
+    private let thinkLongSheet: SpriteSheet?
 
     private var frameIndex = 0
     private var animationTimer: Timer?
     private var lastIdleFrameAdvance: CFTimeInterval = 0
     private var lastSleepFrameAdvance: CFTimeInterval = 0
+    private var lastThinkLongFrameAdvance: CFTimeInterval = 0
+    private var thinkingStartTime: CFTimeInterval = 0
+    private var isCurrentlyLongThinking = false
+    private let longThinkThreshold: CFTimeInterval = 120
 
     private let jumpArc = JumpArc(duration: PetAnimation.jump.duration ?? 0.7)
     private let wakeTimer = PlayOnceTimer(duration: PetAnimation.wake.duration ?? 0.6)
@@ -65,6 +70,7 @@ final class PetView: NSView {
         alertSheet = SpriteSheet(resourceName: PetAnimation.alert.resourceName, frameSize: PetAnimation.alert.frameSize)
         successSheet = SpriteSheet(resourceName: PetAnimation.success.resourceName, frameSize: PetAnimation.success.frameSize)
         failSheet = SpriteSheet(resourceName: PetAnimation.fail.resourceName, frameSize: PetAnimation.fail.frameSize)
+        thinkLongSheet = SpriteSheet(resourceName: PetAnimation.thinkLong.resourceName, frameSize: PetAnimation.thinkLong.frameSize)
         super.init(frame: frameRect)
         startAnimationTimer()
     }
@@ -77,6 +83,7 @@ final class PetView: NSView {
         alertSheet = SpriteSheet(resourceName: PetAnimation.alert.resourceName, frameSize: PetAnimation.alert.frameSize)
         successSheet = SpriteSheet(resourceName: PetAnimation.success.resourceName, frameSize: PetAnimation.success.frameSize)
         failSheet = SpriteSheet(resourceName: PetAnimation.fail.resourceName, frameSize: PetAnimation.fail.frameSize)
+        thinkLongSheet = SpriteSheet(resourceName: PetAnimation.thinkLong.resourceName, frameSize: PetAnimation.thinkLong.frameSize)
         super.init(coder: coder)
         startAnimationTimer()
     }
@@ -108,8 +115,18 @@ final class PetView: NSView {
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
         guard !isInProtectedReaction else { return }
+        if state != .thinking {
+            // Fresh entry into thinking — start the long-think clock. Repeated
+            // calls while already thinking (e.g. one per tool call) must NOT
+            // reset this, or a long task never actually reaches the threshold.
+            thinkingStartTime = CACurrentMediaTime()
+            isCurrentlyLongThinking = false
+        }
         setState(.thinking)
-        emoteOverlay.setKind(.thinking)
+        // Re-assert whichever overlay is currently correct rather than always
+        // .thinking — this fires on every tool call, so blindly resetting it
+        // would flip long-think's slow dots back to fast on the next call.
+        emoteOverlay.setKind(isCurrentlyLongThinking ? .thinkingLong : .thinking)
     }
 
     func triggerJump() {
@@ -223,8 +240,10 @@ final class PetView: NSView {
 
         let now = CACurrentMediaTime()
         switch state {
-        case .idle, .thinking:
+        case .idle:
             advanceFrameIfDue(sheet: idleSheet, fps: PetAnimation.idle.fps, lastAdvance: &lastIdleFrameAdvance, now: now)
+        case .thinking:
+            tickThinking(now: now)
         case .sleeping:
             advanceFrameIfDue(sheet: sleepSheet, fps: PetAnimation.sleep.fps, lastAdvance: &lastSleepFrameAdvance, now: now)
         case .jumping, .waking, .alerting, .succeeding, .failing:
@@ -232,6 +251,23 @@ final class PetView: NSView {
         }
 
         needsDisplay = true
+    }
+
+    private func tickThinking(now: CFTimeInterval) {
+        let longNow = (now - thinkingStartTime) >= longThinkThreshold
+        if longNow != isCurrentlyLongThinking {
+            isCurrentlyLongThinking = longNow
+            frameIndex = 0
+            lastIdleFrameAdvance = now
+            lastThinkLongFrameAdvance = now
+            emoteOverlay.setKind(longNow ? .thinkingLong : .thinking)
+        }
+
+        if longNow {
+            advanceFrameIfDue(sheet: thinkLongSheet, fps: PetAnimation.thinkLong.fps, lastAdvance: &lastThinkLongFrameAdvance, now: now)
+        } else {
+            advanceFrameIfDue(sheet: idleSheet, fps: PetAnimation.idle.fps, lastAdvance: &lastIdleFrameAdvance, now: now)
+        }
     }
 
     /// The master timer ticks at idle's rate (fast enough for smooth arcs/
@@ -271,8 +307,12 @@ final class PetView: NSView {
     /// and advances play-once states (jumping/waking/alerting) as a side effect.
     private func currentFrame() -> (SpriteSheet?, Int, CGFloat) {
         switch state {
-        case .idle, .thinking:
+        case .idle:
             return (idleSheet, frameIndex, 0)
+
+        case .thinking:
+            let sheet = isCurrentlyLongThinking ? thinkLongSheet : idleSheet
+            return (sheet, frameIndex, 0)
 
         case .sleeping:
             return (sleepSheet, frameIndex, 0)

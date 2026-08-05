@@ -69,4 +69,14 @@ enum PetAnimation {
         loops: false,
         duration: 1.5
     )
+
+    /// Presentation swap for thinking past longThinkThreshold (see PetView) —
+    /// curled/settled pose instead of idle's stance, at a calmer pace.
+    static let thinkLong = SpriteAnimationConfig(
+        resourceName: "cat_think_long",
+        frameSize: CGSize(width: 64, height: 64),
+        fps: 1,
+        loops: true,
+        duration: nil
+    )
 }

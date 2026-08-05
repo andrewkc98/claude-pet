@@ -23,6 +23,8 @@ targets:
         buildPhase: resources
       - path: Assets/cat_fail.png
         buildPhase: resources
+      - path: Assets/cat_think_long.png
+        buildPhase: resources
     info:
       path: Generated/Info.plist
       properties:
