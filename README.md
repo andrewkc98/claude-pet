@@ -9,6 +9,11 @@ a while.
 
 **Requirements:** macOS 13 (Ventura) or later, and [Claude Code](https://claude.com/claude-code).
 
+> **On Windows?** See [windows/README-windows.md](windows/README-windows.md). The Windows
+> port lives in [`windows/`](windows/), shares these sprite assets and the same event
+> protocol, and supports both Claude Code and Claude Desktop's Cowork mode. The rest of
+> this README covers the macOS app.
+
 ## Install
 
 1. Download `ClaudePet.zip` from the [Releases page](../../releases), unzip it, and drag
@@ -114,6 +119,12 @@ xcodebuild -project ClaudePet.xcodeproj -scheme ClaudePet -configuration Release
 ```
 
 The built app (with `petsend` embedded) lands in `build/Build/Products/Release/ClaudePet.app`.
+
+To build the Windows app instead, see
+[Building from source](windows/README-windows.md#building-from-source) in the Windows
+README — it uses Python 3.12 and PyInstaller (`windows\build.ps1`), needs no Xcode, and
+reads the sprites straight out of this repo's [`Assets/`](Assets/) so both platforms stay
+single-sourced.
 
 See [PET_PLAN.md](PET_PLAN.md), [ART_SPEC.md](ART_SPEC.md), and [ROADMAP.md](ROADMAP.md) for
 the design/build history and what's planned next.
