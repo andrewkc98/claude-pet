@@ -53,6 +53,12 @@ final class PetView: NSView {
     private var alertPhase: AlertPhase = .transitioning
     private var alertHoldStartTime: CFTimeInterval = 0
     private let alertHoldFrameInterval: CFTimeInterval = 1.0
+    private var alertShownAt: CFTimeInterval = 0
+    // Guarantees the alert stays visible at least this long even if the thing
+    // it was for resolves almost instantly (a fast permission prompt, a
+    // trailing hook from unrelated activity) — otherwise "real activity
+    // clears it" can mean it clears before anyone actually sees it.
+    private let minimumAlertVisibleDuration: CFTimeInterval = 1.5
 
     private var lastActivityTime = CFAbsoluteTimeGetCurrent()
     private var sleepTimeout: TimeInterval = 5 * 60
@@ -94,17 +100,23 @@ final class PetView: NSView {
     /// States representing a brief, self-terminating reaction that should be
     /// allowed to finish playing rather than getting cut short by the next
     /// prompt/tool event — which, during an active turn, can arrive within
-    /// milliseconds of the reaction starting. Deliberately excludes .alerting:
-    /// that one isn't self-terminating, and a genuine "needs you" alert should
-    /// yield the moment real activity resumes (e.g. PostToolUse firing right
-    /// after an AskUserQuestion gets answered) rather than requiring a click
-    /// even though the moment it was for has clearly passed. It persists
-    /// during a true block anyway, since nothing else fires while blocked.
+    /// milliseconds of the reaction starting.
+    ///
+    /// .alerting is a special case, protected only for minimumAlertVisibleDuration:
+    /// a genuine "needs you" alert should yield once real activity resumes
+    /// (e.g. PostToolUse firing after an AskUserQuestion gets answered) rather
+    /// than requiring a click even though the moment it was for has passed —
+    /// but without a floor, a fast-resolving trigger (a permission prompt
+    /// answered in under a second, a trailing hook from unrelated activity)
+    /// could clear it before anyone actually perceives it. It persists during
+    /// a true block regardless, since nothing else fires while blocked.
     private var isInProtectedReaction: Bool {
         switch state {
         case .jumping, .waking, .succeeding, .failing:
             return true
-        case .idle, .thinking, .sleeping, .alerting:
+        case .alerting:
+            return (CACurrentMediaTime() - alertShownAt) < minimumAlertVisibleDuration
+        case .idle, .thinking, .sleeping:
             return false
         }
     }
@@ -136,7 +148,7 @@ final class PetView: NSView {
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
-        guard state != .waking else { return }
+        guard !isInProtectedReaction else { return }
         setState(.jumping)
         emoteOverlay.setKind(.none)
         jumpArc.trigger()
@@ -165,6 +177,7 @@ final class PetView: NSView {
         guard state != .waking else { return }
         setState(.alerting)
         alertPhase = .transitioning
+        alertShownAt = CACurrentMediaTime()
         emoteOverlay.setKind(.none)
         alertIntroTimer.trigger()
     }
@@ -176,7 +189,7 @@ final class PetView: NSView {
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
-        guard state != .waking else { return }
+        guard !isInProtectedReaction else { return }
         setState(.succeeding)
         emoteOverlay.setKind(.none)
         successTimer.trigger()
@@ -189,7 +202,7 @@ final class PetView: NSView {
             return
         }
         lastActivityTime = CFAbsoluteTimeGetCurrent()
-        guard state != .waking else { return }
+        guard !isInProtectedReaction else { return }
         setState(.failing)
         emoteOverlay.setKind(.none)
         failTimer.trigger()
