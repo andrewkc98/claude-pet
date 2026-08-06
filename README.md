@@ -63,6 +63,14 @@ a while.
    }
    ```
 
+   **Note on the "!" alert:** it only fires for `AskUserQuestion` (Claude explicitly asking
+   you something) — not for genuine tool-permission prompts. Claude Desktop routes
+   permission approvals through its own native dialog via a separate mechanism that
+   doesn't go through Claude Code's `Notification` hook, so there's currently no way for
+   ClaudePet to detect "waiting on your permission" specifically. (We tried widening the
+   hook to fire on every tool call as a rough proxy; it just meant the alert fired
+   constantly, including for calls that never needed approval, so it got reverted.)
+
    **If you already have hooks configured**, merge these entries into your existing
    `hooks` object rather than replacing the file — don't clobber hooks you already have
    for other tools. `~/.claudepet/bin/petsend` is installed automatically the first time
