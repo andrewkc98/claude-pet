@@ -18,10 +18,12 @@ a while.
    Developer ID ($99/yr), so macOS doesn't recognize it and refuses to open it with a plain
    double-click. This is expected for free/independent Mac software, not a sign anything's
    wrong. To get past it:
-   - Right-click (or Control-click) `ClaudePet.app` → **Open** → confirm **Open** in the
-     dialog that appears, **or**
-   - If that dialog doesn't offer an Open button, go to **System Settings → Privacy &
-     Security**, scroll down, and click **Open Anyway** next to the ClaudePet block notice.
+   - Go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway**
+     next to the ClaudePet block notice, then confirm **Open** when it relaunches. This is
+     the reliable method on macOS Sequoia (15) and later, where Apple removed the older
+     right-click shortcut.
+   - On macOS Ventura/Sonoma (13–14), right-clicking (or Control-clicking) `ClaudePet.app`
+     and choosing **Open** → **Open** may work as a shortcut instead.
 
    You only need to do this once — after the first approved launch, it opens normally.
 
