@@ -8,18 +8,43 @@ Flag mapping from the macOS original:
 
 macOS's `collectionBehavior` has no Windows analogue (there are no Spaces), and
 `beginActivity` isn't needed — Windows doesn't App-Nap timers.
+
+`WindowStaysOnTopHint` alone is not sufficient here. Qt sets WS_EX_TOPMOST as a
+*style bit* when the flags are applied, but that does not by itself place the
+window into the topmost z-band — and the two can disagree. Observed in practice:
+the pet carried WS_EX_TOPMOST while sitting at z-index 8 with six ordinary
+windows stacked above it, so the flag read as correct while the cat was buried.
+The band has to be claimed explicitly with SetWindowPos(HWND_TOPMOST), which
+needs a live HWND and therefore can only happen after the window is shown.
+
+It also has to be re-asserted: other applications claim the topmost band when
+they go fullscreen or show their own overlays, and Explorer restarts drop it
+entirely. A cheap periodic nudge (SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE moves
+nothing and steals no focus) is what keeps the cat reliably on top.
 """
 
 from __future__ import annotations
 
+import ctypes
+import sys
 from typing import Callable
 
-from PySide6.QtCore import QPoint, Qt
+from PySide6.QtCore import QPoint, Qt, QTimer
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import QWidget
 
 from . import position_store
 from .pet_widget import WINDOW_HEIGHT, WINDOW_WIDTH, PetWidget
+
+#: SetWindowPos hwndInsertAfter / flags. See MSDN SetWindowPos.
+_HWND_TOPMOST = -1
+_SWP_NOSIZE = 0x0001
+_SWP_NOMOVE = 0x0002
+_SWP_NOACTIVATE = 0x0010
+
+#: How often to re-claim the topmost band. Long enough to be free, short enough
+#: that a fullscreen app which stole it doesn't hide the cat for noticeably long.
+_TOPMOST_KEEPALIVE_MS = 2000
 
 
 class PetWindow(QWidget):
@@ -44,6 +69,10 @@ class PetWindow(QWidget):
 
         restored = position_store.load_position(WINDOW_WIDTH, WINDOW_HEIGHT)
         self.move(restored or position_store.default_position(WINDOW_WIDTH, WINDOW_HEIGHT))
+
+        self._topmost_timer = QTimer(self)
+        self._topmost_timer.setInterval(_TOPMOST_KEEPALIVE_MS)
+        self._topmost_timer.timeout.connect(self._assert_topmost)
 
     # MARK: - Façade, mirroring PetPanel's forwarding methods
 
@@ -73,6 +102,40 @@ class PetWindow(QWidget):
             self.hide()
         else:
             self.show()
+
+    # MARK: - Always-on-top
+
+    def showEvent(self, event) -> None:  # noqa: N802 - Qt naming
+        super().showEvent(event)
+        # First point at which winId() is a real HWND, so this is the earliest
+        # the topmost band can actually be claimed.
+        self._assert_topmost()
+        self._topmost_timer.start()
+
+    def hideEvent(self, event) -> None:  # noqa: N802 - Qt naming
+        super().hideEvent(event)
+        self._topmost_timer.stop()
+
+    def _assert_topmost(self) -> None:
+        """Claim the topmost z-band. No-op off Windows; never raises."""
+        if sys.platform != "win32":
+            return
+        hwnd = int(self.winId())
+        if not hwnd:
+            return
+        try:
+            ctypes.windll.user32.SetWindowPos(
+                hwnd,
+                _HWND_TOPMOST,
+                0,
+                0,
+                0,
+                0,
+                _SWP_NOMOVE | _SWP_NOSIZE | _SWP_NOACTIVATE,
+            )
+        except OSError:
+            # Losing the band is cosmetic; it is never worth taking the app down.
+            pass
 
     # MARK: - Internals
 

@@ -5,3 +5,6 @@ DerivedData/
 *.xcuserstate
 xcuserdata/
 .DS_Store
+
+# Per-machine Claude Code settings (permission grants, local overrides).
+.claude/
