@@ -11,8 +11,11 @@ a while.
 
 > **On Windows?** See [windows/README-windows.md](windows/README-windows.md). The Windows
 > port lives in [`windows/`](windows/), shares these sprite assets and the same event
-> protocol, and supports both Claude Code and Claude Desktop's Cowork mode. The rest of
-> this README covers the macOS app.
+> protocol, and supports both Claude Code and Claude Desktop's Cowork mode.
+
+> **On Linux?** See [linux/README-linux.md](linux/README-linux.md). The Linux port lives in
+> [`linux/`](linux/) and shares the same Python/PySide6 codebase as the Windows port, the same
+> sprite assets, and the same event protocol. The rest of this README covers the macOS app.
 
 ## Install
 
@@ -125,6 +128,10 @@ To build the Windows app instead, see
 README — it uses Python 3.12 and PyInstaller (`windows\build.ps1`), needs no Xcode, and
 reads the sprites straight out of this repo's [`Assets/`](Assets/) so both platforms stay
 single-sourced.
+
+To build the Linux app, see [Building from source](linux/README-linux.md#building-from-source)
+in the Linux README — same Python/PyInstaller approach as Windows (`linux/build.sh`), also
+reading sprites straight out of [`Assets/`](Assets/).
 
 See [PET_PLAN.md](PET_PLAN.md), [ART_SPEC.md](ART_SPEC.md), and [ROADMAP.md](ROADMAP.md) for
 the design/build history and what's planned next.

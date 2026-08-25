@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=ClaudePet
+Comment=A pixel-art cat that reacts to Claude Code and Cowork
+Exec=ClaudePet
+Icon=claudepet
+Terminal=false
+Categories=Utility;
